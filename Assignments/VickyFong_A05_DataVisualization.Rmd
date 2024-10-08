@@ -109,7 +109,8 @@ temp <- ntl %>%
   ggplot(aes(x=month, y=temperature_C, fill=lakename))+
   geom_boxplot() +
   labs(x='', y='Temperature (C)', fill='Lake')+
-  scale_x_discrete(limits=c('5','6','7','8','9','10','11'), labels=NULL) +
+  scale_x_discrete(breaks = seq_along(month.abb), 
+    labels = month.abb) +
   theme(legend.position = 'top') +
   my_theme
 temp
@@ -120,7 +121,8 @@ tp <- ntl %>%
   ggplot(aes(x=month, y=tp_ug, fill=lakename))+
   geom_boxplot() +
   labs(x='', y='Phosphorus', fill='Lake')+
-  scale_x_discrete(limits=c('5','6','7','8','9','10','11'), labels=NULL) +
+  scale_x_discrete(limits=c('5','6','7','8','9','10','11'), breaks = seq_along(month.abb), 
+    labels = month.abb) +
   theme(legend.position = 'none') +
   my_theme
 tp
@@ -131,7 +133,8 @@ tn <- ntl %>%
   ggplot(aes(x=month, y=tn_ug, fill=lakename))+
   geom_boxplot() +
   labs(x='Month', y='Nitrogen', fill='Lake')+
-  scale_x_discrete(limits=c('5','6','7','8','9','10','11')) +
+  scale_x_discrete(limits=c('5','6','7','8','9','10','11'), breaks = seq_along(month.abb), 
+    labels = month.abb) +
   theme(legend.position = 'none') +
   my_theme
 tn
@@ -150,27 +153,23 @@ Question: What do you observe about the variables of interest over seasons and b
 ```{r Plot litter}
 #6
 needles <- neon %>%
-  filter(functionalGroup == 'Needles') %>%
-  select(collectDate,functionalGroup,dryMass,nlcdClass) %>%
-  mutate(date = as.factor(collectDate))
+  filter(functionalGroup == 'Needles')
 
 needles %>%
-  ggplot(aes(x=date, y=dryMass, fill=nlcdClass))+
-  geom_boxplot() +
-  labs(x='Date', y='Dry Mass (g)', fill='NLCD Class') +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  ggplot(aes(x=collectDate, y=dryMass, color=nlcdClass))+
+  geom_point() +
+  labs(x='Date', y='Dry Mass (g)', color='NLCD Class') +
   my_theme
 
 #7
 needles %>%
-  ggplot(aes(x=date, y=dryMass, fill=nlcdClass))+
-  geom_boxplot() +
-  facet_wrap(~nlcdClass, ncol = 1) +
-  labs(x='Date', y='Dry Mass (g)', title='Dry Mass of Needles in 3 NLCD') +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1),
-        legend.position = 'none') +
+  ggplot(aes(x=collectDate, y=dryMass))+
+  geom_point() +
+  facet_wrap(~nlcdClass) +
+  labs(x='Date', y='Dry Mass (g)', title='Dry Mass of Needles in 3 NLCD Classes') +
+  theme(legend.position = 'none') +
   my_theme
 ```
 Question: Which of these plots (6 vs. 7) do you think is more effective, and why? 
 
-> Answer: The facet wrap plots in question 7 is more effective as the x-axis spans a large time frame and thus it was very difficult to see the data with three NLCD classes. Since the collection dates in the x-axis is the same across NLCD classes, separating the data into three facet wrap graphs allows us to better visualize the temporal trends of needle dry mass in each type of NLCD. 
+> Answer: The facet wrap plots in question 7 is more effective as it is difficult to see the variation in dry mass wihtin each NLCD class when they are graphed together in question 6. The graph in question 6 is also not colorblind friendly. The facet wrap plots are more effective in showing how dry mass differs over time for each of the three land use types.
