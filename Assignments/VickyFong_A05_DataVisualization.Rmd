@@ -138,9 +138,13 @@ tn <- ntl %>%
   theme(legend.position = 'none') +
   my_theme
 tn
+```
 
+```{r Create cowplot, fig.height = 10}
+#5 cowplot
 plot_grid(temp,tp,tn, labels="AUTO", ncol = 1)
 ```
+
 
 Question: What do you observe about the variables of interest over seasons and between lakes? 
 
